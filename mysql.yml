@@ -1,0 +1,25 @@
+---
+- name: update
+  hosts: all
+  gather_facts: false
+  become: yes  
+  tasks:
+  - name: Update
+    apt:
+      # update_only: yes
+      update_cache: yes
+- name: Install MySQL and start service
+  hosts: database
+  gather_facts: false
+  become: yes
+  tasks: 
+    - name: Install MySQL
+      apt: 
+        name: mysql-server
+        state: latest
+    - name: Start MySQL service
+      service: 
+        name: mysql
+        state: started
+        enabled: yes
+
