@@ -1,0 +1,67 @@
+---
+- name: integration of certbot uisng ansible
+  hosts: all
+  become: true
+  gather_facts: True
+  become_method: sudo
+
+  tasks:
+  - name: Ensure certbot is removed
+    apt:
+      pkg: certbot
+      state: absent
+
+  - name: certbot
+    community.general.snap:
+      name: certbot
+      state: absent
+
+  - name: Ensure certbot is removed
+    apt:
+      pkg: autoremove
+      state: absent
+
+
+
+  - name: remove certbot-dns-route53
+    ansible.builtin.command:
+       cmd: snap remove certbot certbot-dns-route53       
+
+  - name: Ensure Nginx is at the latest version
+    apt:
+      name: nginx
+      state: latest
+
+  - name: install snapd
+    apt:
+      name: snapd
+      state: latest   
+
+  - name: Install core
+    community.general.snap:
+      name: core
+
+  - name: Reload service core, in all cases
+    ansible.builtin.command:
+      cmd: snap refresh core
+     
+
+
+  - name: classic
+    ansible.builtin.command:
+       cmd: snap install --classic certbot
+
+  - name: trust
+    ansible.builtin.command:
+      cmd: snap set certbot trust-plugin-with-root=ok
+
+
+  - name: certbot-dns-route53
+    ansible.builtin.command:
+       cmd: snap install certbot-dns-route53   
+
+  - name: Download nginx.conf
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
+      dest: /etc/nginx/conf 
+
