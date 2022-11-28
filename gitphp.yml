@@ -1,0 +1,32 @@
+---
+- name: integration of terraform and ansible
+  hosts: all
+  become: true
+  become_method: sudo
+
+  tasks:
+  - name: Ensure Nginx is at the latest version
+    apt:
+      name: nginx
+      state: latest
+
+  - name: Make sure Nginx is running
+    systemd:
+      state: started
+      name: nginx
+
+  - name: installing php
+    package:
+         name: php
+         state: present
+
+  - name: "Update packages and upgrade"
+    apt:
+      update_cache: true
+      upgrade: dist
+      force_apt_get: true      
+
+  - name: installing git
+    package:
+        name: git
+        state: present 
