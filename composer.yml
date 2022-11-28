@@ -1,0 +1,10 @@
+---
+- name: supervisor installation
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure composer is at the latest version
+      apt:
+        name: composer
+        state: latest
