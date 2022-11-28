@@ -1,0 +1,10 @@
+---
+- name: supervisor installation
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure supervisor is at the latest version
+      apt:
+        name: supervisor
+        state: latest
