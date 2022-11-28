@@ -1,0 +1,21 @@
+- hosts: all
+  gather_facts: True
+  become: yes
+  vars:
+    awscliconf_files:
+      credentials:
+        - default:
+            aws_access_key_id: 'abc'
+            aws_secret_access_key: '123'
+      config:
+        - default:
+            region: ap-south-1
+            output: json
+        - profile development:
+            role_arn: 'arn:aws:iam::434401341886:role/Ansible-role'
+            region:  ap-south-1
+            source_profile: default   
+
+  roles:
+    - role: christiangda.awscli
+    - role: christiangda.awscli_configure  
